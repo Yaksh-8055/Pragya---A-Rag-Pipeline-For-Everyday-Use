@@ -1,0 +1,90 @@
+# ============================================================
+# RAG Pipeline — Complete Dependency Manifest
+# ============================================================
+# Install:  pip install -r requirements.txt
+# ============================================================
+
+# ------------------------------------------------------------------
+# Core Pipeline (REQUIRED)
+# ------------------------------------------------------------------
+tiktoken>=0.7.0              # Token counting (cl100k_base) — Stage 2 & 6
+chromadb>=0.5.0              # Local vector database — Stage 4 & 5
+
+# ------------------------------------------------------------------
+# Document Parsing — Text & Code (REQUIRED)
+# ------------------------------------------------------------------
+# Standard library only: csv, json, io, pathlib, re, mimetypes, hashlib, time
+# No extra packages needed for .txt, .md, .py, .json, .csv, .xml, .yaml, .log, .sql, etc.
+
+# ------------------------------------------------------------------
+# Document Parsing — PDF (REQUIRED)
+# ------------------------------------------------------------------
+pymupdf>=1.23.0              # fitz — primary PDF engine (text extraction, OCR rasterization)
+# pypdf>=4.0.0               # Optional: only used via LangChain's PyPDFLoader fallback
+
+# ------------------------------------------------------------------
+# Document Parsing — Microsoft Office (REQUIRED)
+# ------------------------------------------------------------------
+python-docx>=1.1.0           # DOCX — python-docx (structure pass: headings, tables, order)
+openpyxl>=3.1.0              # XLSX — spreadsheet parsing (read_only, data_only)
+python-pptx>=0.6.23          # PPTX — presentation parsing (slides, shapes, text)
+
+# ------------------------------------------------------------------
+# Document Parsing — HTML / Web (REQUIRED)
+# ------------------------------------------------------------------
+beautifulsoup4>=4.12.0       # bs4 — HTML parsing (script/style removal, structure extraction)
+
+# ------------------------------------------------------------------
+# Document Parsing — Images & OCR (REQUIRED for scanned PDFs / images)
+# ------------------------------------------------------------------
+pillow>=10.0.0               # PIL — image loading, conversion, multi-frame (TIFF/GIF)
+pytesseract>=0.3.10          # Tesseract OCR wrapper (requires system tesseract-ocr)
+# System dependency: tesseract-ocr (Windows: choco install tesseract / winget install UB-Mannheim.tesseract)
+
+# ------------------------------------------------------------------
+# Document Parsing — Encoding & MIME (REQUIRED)
+# ------------------------------------------------------------------
+chardet>=5.0.0               # Character encoding detection (fallback for non-UTF8 text)
+
+# ------------------------------------------------------------------
+# Document Parsing — RTF (OPTIONAL — custom fallback included)
+# ------------------------------------------------------------------
+# striprtf>=0.0.26           # Not used — direct_text.py has regex-based RTF stripper
+
+# ------------------------------------------------------------------
+# LangChain Ecosystem (OPTIONAL but RECOMMENDED — used in layout.py)
+# ------------------------------------------------------------------
+# These enable the "coverage pass" for DOCX (headers/footers/textboxes/content controls)
+# and provide robust PDF loaders (PyMuPDFLoader, PyPDFLoader) as fallbacks.
+# The pipeline works WITHOUT them (graceful fallback), but coverage improves.
+langchain-community>=0.2.0   # Document loaders: Docx2txtLoader, PyMuPDFLoader, PyPDFLoader
+docx2txt>=0.8.0              # Backend for Docx2txtLoader (extracts text from DOCX via antiword/libreoffice)
+
+# ------------------------------------------------------------------
+# Generation / LLM Client (REQUIRED at runtime — not Python packages)
+# ------------------------------------------------------------------
+# Ollama (http://localhost:11434) — provides:
+#   • Embedding model:  nomic-embed-text  (or any compatible)
+#   • Chat model:     qwen2.5:7b (or qwen3:4b, llama3.1:8b, etc.)
+# No pip package — install Ollama separately: https://ollama.com
+
+# ------------------------------------------------------------------
+# Standard Library (always available — listed for completeness)
+# ------------------------------------------------------------------
+# argparse, csv, hashlib, importlib, inspect, io, json, math, mimetypes,
+# os, pathlib, re, sqlite3, sys, threading, time, typing, urllib, warnings, zipfile
+
+# ============================================================
+# Quick Install Commands
+# ============================================================
+# Minimal (core only, no LangChain fallbacks):
+#   pip install tiktoken chromadb pymupdf python-docx openpyxl python-pptx beautifulsoup4 pillow pytesseract chardet
+#
+# Recommended (with LangChain fallbacks for best DOCX/PDF coverage):
+#   pip install tiktoken chromadb pymupdf python-docx openpyxl python-pptx beautifulsoup4 pillow pytesseract chardet langchain-community docx2txt
+#
+# System prerequisites (run once per machine):
+#   • Ollama:          https://ollama.com/download
+#   • Tesseract OCR:   Windows: choco install tesseract | Linux: apt-get install tesseract-ocr | Mac: brew install tesseract
+#   • Python:          3.10+ recommended (3.9+ supported)
+# ============================================================
